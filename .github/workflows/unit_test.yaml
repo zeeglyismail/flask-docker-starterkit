@@ -1,0 +1,22 @@
+name: Run unit tests
+on: 
+  push:
+    branches: [ main ]
+  pull_request:
+        types: [opened, reopened]
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        
+        steps:
+            - uses: actions/checkout@v3
+            - name: Generate request .env file
+              run:
+                echo DEBUG=True >> .env
+                echo FLASH_DEBUG=1 >> .env
+                echo FLASH_APP=run.py >> .env
+            - name: Building App
+              run: docker compose build
+            - name: Run tests
+              run: docker compose up  test-runner
+                
